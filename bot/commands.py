@@ -2,13 +2,23 @@ import PIL
 import os
 import random
 import json
-from pyrogram import Client, filters
-from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
+from pyrogram import filters
+from pyromod import Client, Message
+from pyromod.exceptions import ListenerTimeout
+from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from pyromod.helpers import ikb
 
 from .database import db
 from .admin import add_user
 from .buttons import HELP_BUTTONS, START_BUTTONS, ABOUT_BUTTONS, CLOSE_BUTTON
-from .constants import START_TEXT, HELP_TEXT, ABOUT_TEXT, ANALYZING_MESSAGE
+from .constants import (
+    START_TEXT,
+    HELP_TEXT,
+    ABOUT_TEXT,
+    ANALYZING_MESSAGE,
+    GENDER_PROMPT,
+    GENDERS,
+)
 from .prompts import PROMPT
 from .gemini import inference_image
 from .stickers import LOADING_STICKERS
@@ -58,6 +68,34 @@ async def snap_nutri(bot: Client, message: Message):
     if message.photo:
         try:
             await add_user(message.from_user.id)
+            user = await db.get_user(message.from_user.id)
+            chat = message.chat
+            if not user.get("dob"):
+                try:
+                    dob_response = await chat.ask(
+                        "Please enter your date of birth (DD-MM-YYYY):",
+                        filters=filters.text,
+                        timeout=30,
+                    )
+                    dob = dob_response.text.strip()
+                    await db.update_user(message.from_user.id, {"dob": dob})
+                except ListenerTimeout:
+                    await message.reply("You took too long to answer.")
+
+            if not user.get("gender"):
+                try:
+                    gender_response = await chat.ask(
+                        GENDER_PROMPT,
+                        filters=filters.text,
+                        timeout=30,
+                    )
+                    gender = gender_response.text.strip()
+                    if gender in GENDERS:
+                        await db.update_user(message.from_user.id, {"gender": gender})
+
+                except ListenerTimeout:
+                    await message.reply("You took too long to answer.")
+
             stkr = await message.reply_sticker(random.choice(LOADING_STICKERS))
             txt = await message.reply(ANALYZING_MESSAGE)
             file_path = await message.download(f"{message.chat.id}.jpg")

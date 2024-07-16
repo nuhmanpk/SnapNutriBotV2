@@ -1,6 +1,7 @@
 from .database import db
 from .admin import add_user
-from pyrogram import Client
+from pyromod import Client
+from pyrogram import filters
 from pyrogram.types import InlineKeyboardMarkup
 from .commands import start, help, about
 
@@ -16,3 +17,11 @@ async def cb_data(_, message):
         await about(_, message, cb=True)
     elif message.data == "close":
         await message.message.delete()
+
+
+@Client.on_callback_query(filters.regex("gender_"))
+async def gender_callback(bot, query):
+    message = query.message.message
+    gender = query.data.split("_")[1]
+    await db.update_user(message.from_user.id, {"gender": gender})
+    await query.message.edit_text(f"Gender updated to {gender.capitalize()}")

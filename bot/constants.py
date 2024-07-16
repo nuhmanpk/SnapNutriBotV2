@@ -9,3 +9,7 @@ ANALYZING_MESSAGE = (
 )
 
 ERROR_MESSAGE = "Oops, I broke something in the backend. 😓"
+
+GENDER_PROMPT = "Please select your gender:\n Specify M,F or O"
+
+GENDERS = ["M", "F", "O", "m", "f", "o"]

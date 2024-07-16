@@ -26,6 +26,10 @@ class Database:
         self.cache[id] = user
         return user
     
+    async def update_user(self, id, update_data):
+        await self.users_col.update_one({"id": int(id)}, {"$set": update_data})
+        self.cache.pop(id, None)
+    
     async def is_user_exist(self, id):
         user = await self.users_col.find_one({'id': int(id)})
         return True if user else False
