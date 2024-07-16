@@ -1,9 +1,14 @@
+import PIL
 from .database import db
 from .admin import add_user
 from pyrogram import Client, filters
-from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from .buttons import HELP_BUTTONS, START_BUTTONS,ABOUT_BUTTONS,CLOSE_BUTTON
-from .constants import START_TEXT,HELP_TEXT,ABOUT_TEXT
+from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
+from .buttons import HELP_BUTTONS, START_BUTTONS, ABOUT_BUTTONS, CLOSE_BUTTON
+from .constants import START_TEXT, HELP_TEXT, ABOUT_TEXT
+from .prompts import PROMPT
+from .gemini import inference_image
+import os
+
 
 @Client.on_message(filters.private & filters.command(["start"]))
 async def start(bot, message, cb=False):
@@ -16,6 +21,7 @@ async def start(bot, message, cb=False):
         disable_web_page_preview=True,
         quote=True,
     )
+
 
 @Client.on_message(filters.private & filters.command(["help"]))
 async def help(bot, message, cb=False):
@@ -42,6 +48,14 @@ async def about(bot, message, cb=False):
         quote=True,
     )
 
-@Client.on_message(filters.private & filters.command(["command"]))
-async def func(bot, message: Message):
-    pass
+
+@Client.on_message(filters.photo and filters.private)
+async def something(bot: Client, message: Message):
+    if message.photo:
+        file_path = await message.download(f"{message.chat.id}.jpg")
+        img = PIL.Image.open(file_path)
+        os.remove(file_path)
+        response = await inference_image(PROMPT, img)
+        await message.reply(response)
+    else:
+        pass
