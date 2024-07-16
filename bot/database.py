@@ -1,5 +1,6 @@
 import motor.motor_asyncio
 from .vars import DATABASE_URL, DATABASE_NAME
+from bson import ObjectId
 
 
 class Database:
@@ -47,7 +48,11 @@ class Database:
 
     async def add_meal(self, user_id, meal_data):
         meal_entry = {"user_id": user_id, **meal_data}
-        await self.meals_col.insert_one(meal_entry)
+        result = await self.meals_col.insert_one(meal_entry)
+        return result.inserted_id
+        
+    async def delete_meal(self, meal_id):
+        await self.meals_col.delete_one({'_id': ObjectId(meal_id)})
     
     async def get_meals_by_user(self, user_id):
         meals = self.meals_col.find({"user_id": user_id})

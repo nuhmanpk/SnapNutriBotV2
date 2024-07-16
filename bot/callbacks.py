@@ -2,7 +2,7 @@ from .database import db
 from .admin import add_user
 from pyromod import Client
 from pyrogram import filters
-from pyrogram.types import InlineKeyboardMarkup
+from pyrogram.types import CallbackQuery
 from .commands import start, help, about
 
 
@@ -25,3 +25,9 @@ async def gender_callback(bot, query):
     gender = query.data.split("_")[1]
     await db.update_user(message.from_user.id, {"gender": gender})
     await query.message.edit_text(f"Gender updated to {gender.capitalize()}")
+
+@Client.on_callback_query(filters.regex("delete_"))
+async def delete_meal_callback(bot: Client, query: CallbackQuery):
+    meal_id = query.data.split("_")[1]
+    await db.delete_meal(meal_id)
+    await query.message.edit_text("The entry has been deleted. ✅")

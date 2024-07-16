@@ -132,10 +132,15 @@ async def snap_nutri(bot: Client, message: Message):
                     "information": information,
                     "timestamp": message.date,
                 }
-                await db.add_meal(message.from_user.id, meal_data)
-
+                meal_id = await db.add_meal(message.from_user.id, meal_data)
+                delete_meal = f"/delete_{meal_id}"
+                response_message = (
+                    f"{response_message}\n\n"
+                    f"❗ If you believe this is incorrect, you can delete this meal entry using: {delete_meal}"
+                )
                 await stkr.delete()
-                await txt.edit(response_message)
+                await txt.delete()
+                await message.reply(response_message, reply_markup=START_BUTTONS)
             else:
                 await stkr.delete()
                 await txt.edit(
@@ -146,3 +151,9 @@ async def snap_nutri(bot: Client, message: Message):
             print("snap_nutri:Error", e)
             await stkr.delete()
             await txt.edit("Oops , I broke something in backend")
+
+@Client.on_message(filters.regex("delete_") and filters.private)
+async def delete_meal(bot: Client, message: Message):
+    meal_id = message.text.split("_")[1]
+    await db.delete_meal(meal_id)
+    await message.reply("The entry has been deleted. ✅")
