@@ -3,8 +3,8 @@ I want the response in a JSON format as follows:
 
 {
   "status": true,
-  "meal":"Guess the name of the dish, if couldn't identify leave it as null",
   "data": {
+    "meal":"Guess the name of the dish, if couldn't identify leave it as null",
     "calories": "``kcal",
     "sugar": "``gm",
     "protein": "``gm",
