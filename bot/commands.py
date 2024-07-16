@@ -3,10 +3,12 @@ import os
 import random
 import json
 from pyrogram import filters
-from pyromod import Client, Message
-from pyromod.exceptions import ListenerTimeout
+from pyrogram import Client
+from pyrogram.types import Message
+# from pyromod import Client, Message
+# from pyromod.exceptions import ListenerTimeout
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from pyromod.helpers import ikb
+# from pyromod.helpers import ikb
 
 from .database import db
 from .admin import add_user
@@ -69,32 +71,32 @@ async def snap_nutri(bot: Client, message: Message):
         try:
             await add_user(message.from_user.id)
             user = await db.get_user(message.from_user.id)
-            chat = message.chat
-            if not user.get("dob"):
-                try:
-                    dob_response = await chat.ask(
-                        "Please enter your date of birth (DD-MM-YYYY):",
-                        filters=filters.text,
-                        timeout=30,
-                    )
-                    dob = dob_response.text.strip()
-                    await db.update_user(message.from_user.id, {"dob": dob})
-                except ListenerTimeout:
-                    await message.reply("You took too long to answer.")
+            # chat = message.chat
+            # if not user.get("dob"):
+            #     try:
+            #         dob_response = await chat.ask(
+            #             "Please enter your date of birth (DD-MM-YYYY):",
+            #             filters=filters.text,
+            #             timeout=30,
+            #         )
+            #         dob = dob_response.text.strip()
+            #         await db.update_user(message.from_user.id, {"dob": dob})
+            #     except ListenerTimeout:
+            #         await message.reply("You took too long to answer.")
 
-            if not user.get("gender"):
-                try:
-                    gender_response = await chat.ask(
-                        GENDER_PROMPT,
-                        filters=filters.text,
-                        timeout=30,
-                    )
-                    gender = gender_response.text.strip()
-                    if gender in GENDERS:
-                        await db.update_user(message.from_user.id, {"gender": gender})
+            # if not user.get("gender"):
+            #     try:
+            #         gender_response = await chat.ask(
+            #             GENDER_PROMPT,
+            #             filters=filters.text,
+            #             timeout=30,
+            #         )
+            #         gender = gender_response.text.strip()
+            #         if gender in GENDERS:
+            #             await db.update_user(message.from_user.id, {"gender": gender})
 
-                except ListenerTimeout:
-                    await message.reply("You took too long to answer.")
+            #     except ListenerTimeout:
+            #         await message.reply("You took too long to answer.")
 
             stkr = await message.reply_sticker(random.choice(LOADING_STICKERS))
             txt = await message.reply(ANALYZING_MESSAGE)
@@ -133,14 +135,21 @@ async def snap_nutri(bot: Client, message: Message):
                     "timestamp": message.date,
                 }
                 meal_id = await db.add_meal(message.from_user.id, meal_data)
-                delete_meal = f"/delete_{meal_id}"
-                response_message = (
-                    f"{response_message}\n\n"
-                    f"❗ If you believe this is incorrect, you can delete this meal entry using: {delete_meal}"
-                )
+                DELETE_MEAL_BUTTON = ikb([[('Wrong prediction? Delete this entry.', 'callback_data=f"delete_{meal_id}"')]])
+                # (
+                #     [
+                #         [
+                #             InlineKeyboardButton(
+                #                 "Wrong prediction? Delete this entry.",
+                #                 callback_data=f"delete_{meal_id}",
+                #             )
+                #         ]
+                #     ]
+                # )
+                print("🎯 ~ commands.py:147 -> DELETE_MEAL_BUTTON: ",  DELETE_MEAL_BUTTON)
+                await message.reply(response_message, reply_markup=DELETE_MEAL_BUTTON)
                 await stkr.delete()
                 await txt.delete()
-                await message.reply(response_message, reply_markup=START_BUTTONS)
             else:
                 await stkr.delete()
                 await txt.edit(

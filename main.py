@@ -9,8 +9,8 @@
 """
 
 from decouple import config
-# from pyrogram import Client
-from pyromod import Client
+from pyrogram import Client
+# from pyromod import Client
 
 BOT_TOKEN = config('BOT_TOKEN')
 API_ID = config('API_ID', cast=int)

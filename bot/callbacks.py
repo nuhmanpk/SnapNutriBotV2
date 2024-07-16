@@ -1,6 +1,8 @@
 from .database import db
 from .admin import add_user
-from pyromod import Client
+# from pyromod import Client
+from pyrogram import Client
+from pyrogram.types import Message
 from pyrogram import filters
 from pyrogram.types import CallbackQuery
 from .commands import start, help, about

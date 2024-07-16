@@ -7,7 +7,10 @@ import asyncio
 import datetime
 import aiofiles
 from .database import db
-from pyrogram import Client, filters
+from pyrogram import filters
+# from pyromod import Client
+from pyrogram import Client
+from pyrogram.types import Message
 from pyrogram.errors import FloodWait, InputUserDeactivated, UserIsBlocked, PeerIdInvalid
 from pyrogram.errors.exceptions.bad_request_400 import PeerIdInvalid
 from .vars import ADMINS
