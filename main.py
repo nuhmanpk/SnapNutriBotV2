@@ -11,6 +11,8 @@
 from decouple import config
 from hydrogram import Client
 
+from bot.scheduler import start_scheduler
+
 BOT_TOKEN = config('BOT_TOKEN')
 API_ID = config('API_ID', cast=int)
 API_HASH = config('API_HASH')
@@ -26,7 +28,7 @@ SESSION_STRING = config('SESSION_STRING')
 # asyncio.run(main())
 
 Bot = Client(
-    "Crypto Bot",
+    "SnapNutriV2 Bot",
     bot_token=BOT_TOKEN,
     api_id=API_ID,
     api_hash=API_HASH,
@@ -35,5 +37,6 @@ Bot = Client(
     session_string=SESSION_STRING
 )
 
-
-Bot.run(print('Bot is Cooking...'))
+if __name__ == "__main__":
+    start_scheduler(Bot)
+    Bot.run(print('Bot is Cooking...'))

@@ -20,3 +20,5 @@ If the image is not a food item or is not recognizable dont take a guess or risk
   "status": false
 }
 """
+
+DAILY_TIPS_PROMPT = """Generate a brief, motivational health tip (max 3 lines) with a fun fact or medical benefit. Include emojis for engagement."""

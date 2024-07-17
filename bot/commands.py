@@ -17,7 +17,7 @@ from .constants import (
     ANALYZING_MESSAGE,
 )
 from .prompts import PROMPT
-from .gemini import inference_image
+from .gemini import generate_with_gemini
 from .stickers import LOADING_STICKERS
 
 
@@ -70,7 +70,7 @@ async def snap_nutri(bot: Client, message: Message):
             file_path = await message.download(f"{message.chat.id}.jpg")
             img = PIL.Image.open(file_path)
             os.remove(file_path)
-            response = await inference_image(PROMPT, img)
+            response = await generate_with_gemini(PROMPT, img)
             response_data = json.loads(response)
 
             if response_data.get("status"):

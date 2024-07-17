@@ -1,13 +1,17 @@
 import google.generativeai as genai
-from .vars import GOOGLE_API_KEY, MODEL_NAME
+from .vars import GOOGLE_API_KEY, GEMINI_VISION, GEMINI_FLASH_1_5
 
 genai.configure(api_key=GOOGLE_API_KEY)
-MODEL = genai.GenerativeModel(MODEL_NAME)
 
 
-async def inference_image(prompt, image):
+async def generate_with_gemini(prompt, image=None):
     message = ""
-    response = MODEL.generate_content([prompt, image])
+    if prompt and image:
+        MODEL = genai.GenerativeModel(GEMINI_VISION)
+        response = MODEL.generate_content([prompt, image])
+    else:
+        MODEL = genai.GenerativeModel(GEMINI_FLASH_1_5)
+        response = MODEL.generate_content(prompt)
     if response.parts:
         for part in response.parts:
             message += part.text
