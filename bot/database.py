@@ -1,6 +1,10 @@
 import motor.motor_asyncio
-from .vars import DATABASE_URL, DATABASE_NAME
+import datetime
+from pymongo import DESCENDING
 from bson import ObjectId
+
+
+from .vars import DATABASE_URL, DATABASE_NAME
 
 
 class Database:
@@ -56,6 +60,21 @@ class Database:
     
     async def get_meals_by_user(self, user_id):
         meals = self.meals_col.find({"user_id": user_id})
+        return meals
+    
+    async def get_meals_by_user_and_date(self, user_id):
+        today = datetime.datetime.utcnow().date()
+        start_of_day = datetime.datetime.combine(today, datetime.time.min)
+        end_of_day = datetime.datetime.combine(today, datetime.time.max)
+        
+        meals_cursor = self.meals_col.find(
+            {
+                "user_id": user_id,
+                "timestamp": {"$gte": start_of_day, "$lt": end_of_day}
+            }
+        ).sort("timestamp", DESCENDING)
+        
+        meals = await meals_cursor.to_list(length=None)
         return meals
 
 

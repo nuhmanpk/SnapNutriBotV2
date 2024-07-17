@@ -15,8 +15,6 @@ from .constants import (
     HELP_TEXT,
     ABOUT_TEXT,
     ANALYZING_MESSAGE,
-    GENDER_PROMPT,
-    GENDERS,
 )
 from .prompts import PROMPT
 from .gemini import inference_image
@@ -67,7 +65,6 @@ async def snap_nutri(bot: Client, message: Message):
     if message.photo:
         try:
             await add_user(message.from_user.id)
-            user = await db.get_user(message.from_user.id)
             stkr = await message.reply_sticker(random.choice(LOADING_STICKERS))
             txt = await message.reply(ANALYZING_MESSAGE)
             file_path = await message.download(f"{message.chat.id}.jpg")
@@ -92,6 +89,7 @@ async def snap_nutri(bot: Client, message: Message):
                     f"**Fat:** {data['fat']}\n\n"
                     f"**Meal Contents:** {', '.join(meal_contents)}\n\n"
                     f"**Information:** {information}"
+                    f"\n\n\nUse /today to track daily intake\n\n"
                 )
 
                 meal_data = {
@@ -128,3 +126,59 @@ async def snap_nutri(bot: Client, message: Message):
             print("snap_nutri:Error", e)
             await stkr.delete()
             await txt.edit("Oops , I broke something in backend")
+
+
+@Client.on_message(filters.command("today") & filters.private)
+async def today_meals(bot: Client, message: Message):
+    try:
+        stkr = await message.reply_sticker(random.choice(LOADING_STICKERS))
+        txt = await message.reply(ANALYZING_MESSAGE)
+        user_id = message.from_user.id
+
+        # Fetch today's meals from the database
+        meals = await db.get_meals_by_user_and_date(user_id)
+
+        if not meals:
+            await message.reply("You haven't logged any meals today.")
+            return
+
+        total_calories = 0
+        total_protein = 0
+        total_sugar = 0
+        total_carbs = 0
+        total_fat = 0
+
+        meals_summary = "🍽️ **Today's Meal Summary:**\n\n"
+
+        for meal in meals:
+            total_calories += int(meal.get("calories",
+                                  "0").replace(" kcal", ""))
+            total_protein += int(meal.get("protein", "0").replace(" gm", ""))
+            total_carbs += int(meal.get("carbs", "0").replace(" gm", ""))
+            total_sugar += int(meal.get("sugat", "0").replace(" gm", ""))
+            total_fat += int(meal.get("fat", "0").replace(" gm", ""))
+
+            meals_summary += (
+                f"**Meal at {meal['timestamp'].strftime('%H:%M')}** (UTC Time)\n"
+                f"**Calories:** {meal.get('calories')}\n"
+                f"**Protein:** {meal.get('protein')}\n"
+                f"**Carbs:** {meal.get('carbs')}\n"
+                f"**Fat:** {meal.get('fat')}\n"
+                f"**Contents:** {', '.join(meal.get('meal_contents', []))}\n\n"
+            )
+
+        total_summary = (
+            f"**Total Calories:** {total_calories} kcal\n"
+            f"**Total Protein:** {total_protein} gm\n"
+            f"**Total Carbs:** {total_carbs} gm\n"
+            f"**Total Fat:** {total_fat} gm\n"
+        )
+        await stkr.delete()
+        await txt.delete()
+        await message.reply(meals_summary + total_summary)
+    except Exception as e:
+        print("Today:Error", e)
+        await stkr.delete()
+        await txt.edit("Oops , I broke something in backend")
+
+
