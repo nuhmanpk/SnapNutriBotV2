@@ -110,12 +110,11 @@ async def snap_nutri(bot: Client, message: Message):
                         [
                             InlineKeyboardButton(
                                 "Wrong prediction? Delete this entry.",
-                                callback_data=f"d_{meal_id}",
+                                callback_data=f"delete_{meal_id}",
                             )
                         ]
                     ]
                 )
-                print("🎯 ~ commands.py:147 -> DELETE_MEAL_BUTTON: ",  DELETE_MEAL_BUTTON)
                 await message.reply(response_message, reply_markup=DELETE_MEAL_BUTTON)
                 await stkr.delete()
                 await txt.delete()
@@ -129,10 +128,3 @@ async def snap_nutri(bot: Client, message: Message):
             print("snap_nutri:Error", e)
             await stkr.delete()
             await txt.edit("Oops , I broke something in backend")
-
-# @Client.on_message(filters.regex("delete_") and filters.private)
-# async def delete_meal(bot: Client, message: Message):
-#     meal_id = message.text.split("_")[1]
-#     print(meal_id)
-#     await db.delete_meal(meal_id)
-#     await message.reply("The entry has been deleted. ✅")
