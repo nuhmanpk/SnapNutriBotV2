@@ -52,7 +52,7 @@ scheduler = AsyncIOScheduler()
 
 def start_scheduler(bot):
     scheduler.add_job(calculate_daily_intakes, 'cron', hour=0, minute=0, args=[bot])
-    scheduler.add_job(send_daily_health_tip, 'cron', hour=12, minute=39, args=[bot])
+    scheduler.add_job(send_daily_health_tip, 'cron', hour=0, minute=0, args=[bot])
     logger.info("Scheduler jobs added")
     scheduler.start()
     logger.info("Scheduler started")
