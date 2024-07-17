@@ -1,4 +1,4 @@
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from hydrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 
 help_button = InlineKeyboardButton('⚙ Help', callback_data='help')

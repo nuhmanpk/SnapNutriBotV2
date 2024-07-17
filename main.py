@@ -9,7 +9,7 @@
 """
 
 from decouple import config
-from pyrogram import Client
+from hydrogram import Client
 # from pyromod import Client
 
 BOT_TOKEN = config('BOT_TOKEN')
