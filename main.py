@@ -26,5 +26,5 @@ Bot = Client(
 )
 
 if __name__ == "__main__":
-    start_scheduler(Bot)
+    # start_scheduler(Bot)
     Bot.run(print('Bot is Cooking...'))
