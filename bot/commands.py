@@ -139,6 +139,8 @@ async def today_meals(bot: Client, message: Message):
         meals = await db.get_meals_by_user_and_date(user_id)
 
         if not meals:
+            await stkr.delete()
+            await txt.delete()
             await message.reply("You haven't logged any meals today.")
             return
 
