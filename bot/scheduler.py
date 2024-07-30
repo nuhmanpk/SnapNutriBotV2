@@ -1,15 +1,11 @@
-import logging
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from datetime import datetime
 from bot.database import db
 from .prompts import DAILY_TIPS_PROMPT
 from .gemini import generate_with_gemini
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
 
 async def calculate_daily_intakes(bot):
-    logger.info("calculate_daily_intakes triggered")
     today = datetime.now().date()
     users_cursor = await db.get_all_users()
     async for user in users_cursor:
@@ -35,10 +31,9 @@ async def send_insight_to_user(bot, user_id, insights):
     try:
         await bot.send_message(user_id, insights)
     except Exception as e:
-        logger.error(f"Error sending message to {user_id}: {e}")
+        print(e)
 
 async def send_daily_health_tip(bot):
-    logger.info("send_daily_health_tip triggered")
     users_cursor = await db.get_all_users()
     tip = await generate_with_gemini(DAILY_TIPS_PROMPT,)
 
@@ -46,13 +41,11 @@ async def send_daily_health_tip(bot):
         try:
             await bot.send_message(user['id'], tip)
         except Exception as e:
-            logger.error(f"Error sending health tip to {user['id']}: {e}")
+            print(e)
 
 scheduler = AsyncIOScheduler()
 
 def start_scheduler(bot):
     scheduler.add_job(calculate_daily_intakes, 'cron', hour=0, minute=0, args=[bot])
     scheduler.add_job(send_daily_health_tip, 'cron', hour=0, minute=0, args=[bot])
-    logger.info("Scheduler jobs added")
     scheduler.start()
-    logger.info("Scheduler started")
