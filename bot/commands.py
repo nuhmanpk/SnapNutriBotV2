@@ -45,7 +45,7 @@ async def start(bot, message, cb=False):
 async def help(bot, message, cb=False):
     if cb:
         message = message.message
-            await message.reply_text(
+        await message.reply_text(
         text=HELP_TEXT,
         reply_markup=HELP_BUTTONS,
         disable_web_page_preview=True,
@@ -65,7 +65,7 @@ async def help(bot, message, cb=False):
 async def about(bot, message, cb=False):
     if cb:
         message = message.message
-            await message.reply_text(
+        await message.reply_text(
         text=ABOUT_TEXT,
         reply_markup=ABOUT_BUTTONS,
         disable_web_page_preview=True,
