@@ -11,10 +11,13 @@ from .commands import start, help, about
 async def cb_data(_, message):
     await add_user(message.from_user.id)
     if message.data == "home":
+        await message.message.delete()
         await start(_, message, cb=True)
     elif message.data == "help":
+        await message.message.delete()
         await help(_, message, cb=True)
     elif message.data == "about":
+        await message.message.delete()
         await about(_, message, cb=True)
     elif message.data == "close":
         await message.message.delete()
