@@ -1,5 +1,5 @@
-PROMPT = """Analyze this image and provide the calories, protein, sugar, carbs, and fat in the food in grams.
-I want the response in a JSON format as follows:
+PROMPT = """You are now a diet planner and calorie intake tracker, Your job is to Analyze this image and provide the calories, protein, sugar, carbs, and fat in the
+ food in grams.I want the response in a JSON format as follows:
 
 {
   "status": true,
