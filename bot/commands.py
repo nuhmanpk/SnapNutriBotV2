@@ -1,5 +1,6 @@
 import PIL
 import os
+import re
 import random
 import json
 from hydrogram import filters
@@ -174,11 +175,15 @@ async def today_meals(bot: Client, message: Message):
         meals_summary = "🍽️ **Today's Meal Summary:**\n\n"
 
         for meal in meals:
-            total_calories += int(meal.get("calories", "0 kcal").replace(" kcal", "").strip())
-            total_protein += int(meal.get("protein", "0 gm").replace(" gm", "").strip())
-            total_carbs += int(meal.get("carbs", "0 gm").replace(" gm", "").strip())
-            total_sugar += int(meal.get("sugar", "0 gm").replace(" gm", "").strip())
-            total_fat += int(meal.get("fat", "0 gm").replace(" gm", "").strip())
+            def extract_number(value):
+                match = re.search(r'(\d+)', value)
+                return int(match.group(1)) if match else 0
+
+            total_calories += extract_number(meal.get("calories", "0 kcal"))
+            total_protein += extract_number(meal.get("protein", "0 gm"))
+            total_carbs += extract_number(meal.get("carbs", "0 gm"))
+            total_sugar += extract_number(meal.get("sugar", "0 gm"))
+            total_fat += extract_number(meal.get("fat", "0 gm"))
 
             meals_summary += (
                 f"**Meal at {meal['timestamp'].strftime('%H:%M')}** (UTC Time)\n"
@@ -201,6 +206,7 @@ async def today_meals(bot: Client, message: Message):
     except Exception as e:
         print("Today:Error", e)
         await stkr.delete()
-        await txt.edit("Oops, something went wrong on our end. Please try again later.\n @BugHunterBots")
+        await txt.edit("Oops, something went wrong on our end. Please try again later.")
+
 
 
