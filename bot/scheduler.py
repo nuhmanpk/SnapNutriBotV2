@@ -3,6 +3,7 @@ from datetime import datetime
 from bot.database import db
 from .prompts import DAILY_TIPS_PROMPT
 from .gemini import generate_with_gemini
+from time import sleep
 
 
 async def calculate_daily_intakes(bot):
@@ -24,7 +25,7 @@ async def calculate_daily_intakes(bot):
             f"**Total Carbs:** {total_carbs} gm\n"
             f"**Total Fat:** {total_fat} gm\n"
         )
-
+        sleep(3)
         await send_insight_to_user(bot, user['id'], insights)
 
 async def send_insight_to_user(bot, user_id, insights):
@@ -39,6 +40,7 @@ async def send_daily_health_tip(bot):
 
     async for user in users_cursor:
         try:
+            sleep(3)
             await bot.send_message(user['id'], tip)
         except Exception as e:
             print(e)
