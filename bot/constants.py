@@ -2,6 +2,7 @@ START_TEXT = """🌟 Welcome! I'm here to help you track your meals and provide 
 
 
 HELP_TEXT = """🛠️ Need assistance? I'm here to help! You can use the following commands:
+Just send me a photo of your meal to get started!\n
 - /start: Begin using the bot
 - /today: Get today's meal summary
 - /help: View this help message
@@ -9,7 +10,7 @@ HELP_TEXT = """🛠️ Need assistance? I'm here to help! You can use the follow
 Feel free to reach out if you have any questions! 😊\n\n@BugHunterBots"""
 
 
-ABOUT_TEXT = """📜 About: This bot, powered by AI, helps you track your daily meals and provides insightful health tips to keep you on track with your nutritional goals. Whether you're looking to monitor your intake or learn more about healthy eating habits, I'm here to assist! 💬\n\n@BugHunterBots"""
+ABOUT_TEXT = """Send me a photo of your meal,\n This bot, powered by AI, helps you track your daily meals and provides insightful health tips to keep you on track with your nutritional goals. Whether you're looking to monitor your intake or learn more about healthy eating habits, I'm here to assist! 💬\n\n@BugHunterBots"""
 
 
 ANALYZING_MESSAGE = (
