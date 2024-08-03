@@ -16,6 +16,8 @@ from .constants import (
     HELP_TEXT,
     ABOUT_TEXT,
     ANALYZING_MESSAGE,
+    FAILED_DETECTION_TEXT,
+    ERROR_MESSAGE
 )
 from .prompts import PROMPT
 from .gemini import generate_with_gemini
@@ -114,13 +116,13 @@ async def snap_nutri(bot: Client, message: Message):
             else:
                 await stkr.delete()
                 await txt.edit(
-                    "❌ The provided image doesn't seem to be a meal. Please try again with a different photo."
+                    FAILED_DETECTION_TEXT
                 )
 
         except Exception as e:
             print("snap_nutri:Error", e)
             await stkr.delete()
-            await txt.edit("Oops , I broke something in backend")
+            await txt.edit(ERROR_MESSAGE)
 
 
 @Client.on_message(filters.command("today") & filters.private)
@@ -179,7 +181,7 @@ async def today_meals(bot: Client, message: Message):
     except Exception as e:
         print("Today:Error", e)
         await stkr.delete()
-        await txt.edit("Oops, something went wrong on our end. Please try again later.")
+        await txt.edit(ERROR_MESSAGE)
 
 
 

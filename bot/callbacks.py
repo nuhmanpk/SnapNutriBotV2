@@ -29,7 +29,6 @@ async def cb_data(_, message):
         disable_web_page_preview=True,
         quote=True,
         )
-        # await start(_, message, cb=True)
     elif message.data == "help":
         await message.message.delete()
         message = message.message
@@ -39,7 +38,6 @@ async def cb_data(_, message):
         disable_web_page_preview=True,
         quote=True,
         )
-        # await help(_, message, cb=True)
     elif message.data == "about":
         await message.message.delete()
         message = message.message
@@ -49,7 +47,6 @@ async def cb_data(_, message):
         disable_web_page_preview=True,
         quote=True,
         )
-        await about(_, message, cb=True)
     elif message.data == "close":
         await message.message.delete()
 
