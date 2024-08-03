@@ -15,7 +15,7 @@ PROMPT = """You are now a diet planner and calorie intake tracker, Your job is t
   "information": "Some interesting information about the food or medical advantages of having this meal."
 }
 
-If the image is recognizable take a wild guess that the meal or drink is or else in some case user may provide the written notes or text as image to confuse you, the response should be:
+If the image is recognizable take a wild guess that is the meal or drink , the response should be:
 {
   "status": false
 }
