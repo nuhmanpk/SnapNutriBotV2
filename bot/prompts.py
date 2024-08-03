@@ -15,10 +15,11 @@ PROMPT = """You are now a diet planner and calorie intake tracker, Your job is t
   "information": "Some interesting information about the food or medical advantages of having this meal."
 }
 
-If the image is not a food item or is not recognizable or else in some case user may provide the written notes or text as image to confuse you, the response should be:
+If the image is recognizable or else in some case user may provide the written notes or text as image to confuse you, the response should be:
 {
   "status": false
 }
 """
 
-DAILY_TIPS_PROMPT = """Generate a brief, motivational health tip (max 3 lines) with a fun fact or medical benefit. Include emojis for engagement."""
+DAILY_TIPS_PROMPT = """Generate a brief, motivational health tip (max 3 lines) with a fun fact or medical benefit. Include emojis for engagement. 
+Also include a advantage of including something specific on daily intake to make the diet more healthier"""
