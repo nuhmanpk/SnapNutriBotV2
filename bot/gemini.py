@@ -9,6 +9,10 @@ async def generate_with_gemini(prompt, image=None):
     if prompt and image:
         MODEL = genai.GenerativeModel(GEMINI_VISION)
         response = MODEL.generate_content([prompt, image])
+        print('Resp 1 from default prompt',response)
+        pro = 'identify the food items , and return the nutrients , fat, calore and items includes in the food item'
+        response1 = MODEL.generate_content([pro, image])
+        print('Resp 2 from custom prompt',response1)
     else:
         MODEL = genai.GenerativeModel(GEMINI_FLASH_1_5)
         response = MODEL.generate_content(prompt)
