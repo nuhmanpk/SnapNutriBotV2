@@ -34,7 +34,7 @@ async def start(bot, message):
 
 
 @Client.on_message(filters.private & filters.command(["help"]))
-async def help(bot, message:
+async def help(bot, message):
     await add_user(message.from_user.id)
     await message.reply_text(
         text=HELP_TEXT,
