@@ -17,9 +17,16 @@ PROMPT = """You are now a diet planner and calorie intake tracker, Your job is t
 
 If the image is recognizable take a wild guess , or else the response should be:
 {
-  "status": false
+  "status": true,
+  information: somedetails about the image
 }
 """
 
 DAILY_TIPS_PROMPT = """Generate a brief, motivational health tip (max 3 lines) with a fun fact or medical benefit. 
 Also include a advantage of including something specific on daily intake to make the diet more healthier, Include emojis for engagement"""
+
+
+# If the image is recognizable take a wild guess , or else the response should be:
+# {
+#   "status": false
+# }
