@@ -68,7 +68,15 @@ async def snap_nutri(bot: Client, message: Message):
             img = PIL.Image.open(file_path)
             os.remove(file_path)
             response = await generate_with_gemini(PROMPT, img)
-            response_data = json.loads(response)
+            try:
+                response_data = json.loads(response)
+            except json.JSONDecodeError:
+                await stkr.delete()
+                await txt.edit(
+                    FAILED_DETECTION_TEXT
+                )
+                return
+            
 
             if response_data.get("status"):
 
