@@ -5,6 +5,11 @@ from .prompts import DAILY_TIPS_PROMPT
 from .gemini import generate_with_gemini
 from time import sleep
 
+def safe_int_conversion(value, unit):
+    try:
+        return int(value.replace(unit, "").strip())
+    except ValueError:
+        return 0
 
 async def calculate_daily_intakes(bot):
     today = datetime.now().date()
@@ -13,10 +18,10 @@ async def calculate_daily_intakes(bot):
         meals_cursor = await db.get_meals_by_user(user['id'])
         total_calories = total_protein = total_carbs = total_fat = 0
         async for meal in meals_cursor:
-            total_calories += int(meal.get("calories", "0").replace(" kcal", ""))
-            total_protein += int(meal.get("protein", "0").replace(" gm", ""))
-            total_carbs += int(meal.get("carbs", "0").replace(" gm", ""))
-            total_fat += int(meal.get("fat", "0").replace(" gm", ""))
+                total_calories += safe_int_conversion(meal.get("calories", "0 kcal"), "kcal")
+                total_protein += safe_int_conversion(meal.get("protein", "0 gm"), "gm")
+                total_carbs += safe_int_conversion(meal.get("carbs", "0 gm"), "gm")
+                total_fat += safe_int_conversion(meal.get("fat", "0 gm"), "gm")
 
         insights = (
             f"Daily Intake for {today}:\n"
