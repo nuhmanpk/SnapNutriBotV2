@@ -28,6 +28,6 @@ if there is no image of food items or any kind of meals or items that are inedib
 
 """
 
-DAILY_TIPS_PROMPT = """Generate a brief, motivational health tip (max 3 lines) with a fun fact or medical benefit. 
+DAILY_TIPS_PROMPT = """Generate a brief, motivational health tip (max 3 lines) with a fun fact or medical benefit.Add a tip along with it like adding a specific fruit or vegetable in meal,
 Also include a advantage of including something specific on daily intake to make the diet more healthier, Include emojis for engagement"""
 
